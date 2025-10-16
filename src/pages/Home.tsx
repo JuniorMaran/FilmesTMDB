@@ -7,16 +7,12 @@ import { MovieBox } from '@/components/molecules/MovieBox';
 
 export const Home: React.FC = () => {
     const [moviePopular, setMoviePopular] = useState<MoviePopularResults[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
     const loadMoviePopularData = async () => {
         try {
-            setIsLoading(true);
             const response = await tmdbService.getMoviePopular();
             setMoviePopular(response?.results);
         } catch (error) {
             console.error('Error fetching popular movies:', error);
-        } finally {
-            setIsLoading(false);
         }
     };
 
