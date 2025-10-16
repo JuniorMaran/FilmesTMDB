@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 
 interface FavoriteButtonProps {

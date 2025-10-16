@@ -51,7 +51,7 @@ export const Home: React.FC = () => {
                 {moviePopular.length > 0 &&
                     moviePopular.map((movie) => (
                         <SwiperSlide >
-                            <MovieBox key={movie.id} movie={movie} isLoading={isLoading} />
+                            <MovieBox key={movie.id} movie={movie} />
                         </SwiperSlide>
                     ))}
             </Swiper>
