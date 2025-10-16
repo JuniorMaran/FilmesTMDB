@@ -1,38 +1,38 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FavoriteButton } from '@/components/atoms/FavoriteButton';
+import { MdDeleteOutline } from 'react-icons/md';
 
 import { BoxImage } from '@/components/atoms/BoxImage';
 import { RatingTag } from '@/components/atoms/RatingTag';
 
-import { type MoviePopularResults } from '@/services/tmdbService';
+import { type MovieByIdResponse, type MoviePopularResults } from '@/services/tmdbService';
 import { useFavoriteMovies } from '@/contexts/FavoriteMoviesContext';
 
-interface MovieBoxProps {
-    movie: MoviePopularResults;
+type FavoriteMovie = MovieByIdResponse | MoviePopularResults;
+
+interface FavoriteMovieBoxProps {
+    movie: FavoriteMovie;
 }
 
-export const MovieBox: React.FC<MovieBoxProps> = ({ movie }) => {
-    const { addMovie, removeMovie, isFavorite } = useFavoriteMovies();
-    const favorite = isFavorite(movie.id);
+export const FavoriteMovieBox: React.FC<FavoriteMovieBoxProps> = ({ movie }) => {
+    const { removeMovie } = useFavoriteMovies();
 
-    const handleFavoriteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleRemoveClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
-
-        if (favorite) {
-            removeMovie(movie.id);
-        } else {
-            addMovie(movie);
-        }
+        removeMovie(movie.id);
     };
 
     return (
         <Link to={`/movie/${movie.id}`}>
             <div className="justify-self-center content-center p-3 m-1 sm:m-5 bg-[var(--primary-color)] rounded-md">
                 <div className="relative">
-                    <button className="absolute top-0 right-0" onClick={handleFavoriteClick}>
-                        <FavoriteButton favorite={favorite} />
+                    <button 
+                        className="absolute top-0 right-0 rounded-full p-2 m-1 cursor-pointer bg-red-500 hover:bg-red-600 transition-colors inline-flex items-center space-x-2" 
+                        onClick={handleRemoveClick}
+                        title="Remover dos favoritos"
+                    >
+                        <MdDeleteOutline className="text-white w-6 h-6" />
                     </button>
                 </div>
 
@@ -49,3 +49,4 @@ export const MovieBox: React.FC<MovieBoxProps> = ({ movie }) => {
         </Link>
     );
 };
+

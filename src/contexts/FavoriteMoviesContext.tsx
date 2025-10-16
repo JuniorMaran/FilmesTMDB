@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { type MovieByIdResponse, type MoviePopularResults } from '@/services/tmdbService';
 
 type FavoriteMovie = MovieByIdResponse | MoviePopularResults;
@@ -12,12 +12,38 @@ interface FavoriteMoviesContextType {
 }
 
 const FavoriteMoviesContext = createContext<FavoriteMoviesContextType | undefined>(undefined);
+const STORAGE_KEY = 'favoriteMovies';
 
 export const FavoriteMoviesProvider: React.FC<{children: React.ReactNode }> = ({children}) => {
-const [favoriteMovies, setFavoriteMovies] = useState<MovieByIdResponse[]>([]);
+  const [favoriteMovies, setFavoriteMovies] = useState<FavoriteMovie[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const addMovie = (movie: MovieByIdResponse) => {
-    const exists = favoriteMovies.some((m: MovieByIdResponse) => m.id === movie.id);
+  useEffect(() => {
+    try {
+      const storedFavorites = localStorage.getItem(STORAGE_KEY);
+      if (storedFavorites) {
+        const parsed = JSON.parse(storedFavorites);
+        setFavoriteMovies(parsed);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar favoritos do localStorage:', error);
+    } finally {
+      setIsLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(favoriteMovies));
+      } catch (error) {
+        console.error('Erro ao salvar favoritos no localStorage:', error);
+      }
+    }
+  }, [favoriteMovies, isLoaded]);
+
+  const addMovie = (movie: FavoriteMovie) => {
+    const exists = favoriteMovies.some((m: FavoriteMovie) => m.id === movie.id);
     if (!exists) {
       setFavoriteMovies([...favoriteMovies, movie]);
     }

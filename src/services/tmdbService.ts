@@ -2,6 +2,7 @@ import { apiService } from '@/services/api';
 
 interface MoviePopularResponse {
     results: MoviePopularResults[];
+    total_results?: number;
 };
 
 export interface MoviePopularResults {
@@ -15,6 +16,7 @@ export interface MovieByIdResponse {
     id: number;
     title: string;
     backdrop_path: string;
+    poster_path: string;
     genres: { name: string }[];
     release_date: string;
     vote_average: number;
@@ -38,9 +40,21 @@ export class TmdbService {
     async getMovieById(id?: string): Promise<MovieByIdResponse> {
         try {
             return apiService.get<MovieByIdResponse>(`/movie/${id}`, {params: {api_key: this.token}});
-            
         } catch (error) {
             new Error('Error fetching movie');
+            throw error;
+        }
+    }
+    async searchMovies(query: string): Promise<MoviePopularResponse> {
+        try {
+            return apiService.get<MoviePopularResponse>('/search/movie', {
+                params: {
+                    api_key: this.token,
+                    query,
+                }
+            });
+        } catch (error) {
+            new Error('Error searching movies');
             throw error;
         }
     }

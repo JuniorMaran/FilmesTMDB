@@ -14,6 +14,7 @@ interface PageConfigType {
 const pageConfig: PageConfigType = {
     home: { name: 'Home', path: '/' },
     favorites: { name: 'Favoritos', path: '/favorites' },
+    explorer: { name: 'Explorar Filmes', path: '/' },
 };
 
 export const PageButton: React.FC<PageButtonProps> = ({ page }) => {

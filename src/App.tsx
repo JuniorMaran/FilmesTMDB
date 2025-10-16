@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Layout from '@/components/Layout';
 import { FavoriteMoviesProvider } from '@/contexts/FavoriteMoviesContext';
-// Lazy loading de todas as páginas
+import { SearchProvider } from '@/contexts/SearchContext';
+
 const Home = React.lazy(() => import('@/pages/Home').then((module) => ({ default: module.Home })));
 const Favorites = React.lazy(() =>
     import('@/pages/Favorites').then((module) => ({ default: module.Favorites }))
@@ -18,10 +19,8 @@ const SearchResults = React.lazy(() =>
     import('@/pages/SearchResults').then((module) => ({ default: module.SearchResults }))
 );
 
-// Componente de loading
 const PageLoader: React.FC = () => (
     <div>
-        {/* <Spin size="large" /> */}
         <span>Carregando...</span>
     </div>
 );
@@ -45,9 +44,11 @@ const AppRoutes: React.FC = () => {
 const App: React.FC = () => {
     return (
         <FavoriteMoviesProvider>
-            <Router>
-                <AppRoutes />
-            </Router>
+            <SearchProvider>
+                <Router>
+                    <AppRoutes />
+                </Router>
+            </SearchProvider>
         </FavoriteMoviesProvider>
     );
 };

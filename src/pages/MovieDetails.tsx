@@ -7,23 +7,29 @@ import { RatingTag } from '@/components/atoms/RatingTag';
 import { getCompleteDate } from '@/utils/dateUtils';
 import { tmdbService, type MovieByIdResponse } from '@/services/tmdbService';
 import { FavoriteButton } from '@/components/atoms/FavoriteButton';
+import { useFavoriteMovies } from '@/contexts/FavoriteMoviesContext';
 
 export const MovieDetails: React.FC = () => {
     const [movieById, setMovieById] = useState<MovieByIdResponse>({} as MovieByIdResponse);
-    const [isLoading, setIsLoading] = useState(false);
+    const { addMovie, removeMovie, isFavorite } = useFavoriteMovies();
 
     const { id } = useParams();
+    const favorite = isFavorite(Number(id));
 
     const loadMoviePopularData = async () => {
         try {
-            setIsLoading(true);
             const response = await tmdbService.getMovieById(id);
-
             setMovieById(response);
         } catch (error) {
             console.error('Error fetching movies:', error);
-        } finally {
-            setIsLoading(false);
+        }
+    };
+
+    const handleFavoriteClick = () => {
+        if (favorite) {
+            removeMovie(Number(id));
+        } else {
+            addMovie(movieById);
         }
     };
 
@@ -43,20 +49,21 @@ export const MovieDetails: React.FC = () => {
                     {movieById?.genres &&
                         movieById.genres.map((genre) => <GenreTag genre={genre.name} />)}
                 </div>
-
                 <div className="font-bold">
                     Data de lançamento:
-                    <span className="font-light"> {getCompleteDate(movieById?.release_date)}</span>
+                    <span className="font-light"> { movieById?.release_date ? getCompleteDate(movieById?.release_date) : 'Não informada'} </span>
                 </div>
                 <div className="mb-2 font-bold">
                     Nota TMDB: <RatingTag rating={movieById?.vote_average} />
                 </div>
 
                 <div className="font-bold text-xl">
-                    Sinopse <p className="font-light text-base"> {movieById?.overview}</p>
+                    Sinopse <p className="font-light text-base"> {movieById?.overview || 'Não informada'}</p>
                 </div>
 
-                <FavoriteButton favorite={false} large />
+                <button onClick={handleFavoriteClick} className="mt-4">
+                    <FavoriteButton favorite={favorite} large />
+                </button>
             </div>
         </div>
     );
