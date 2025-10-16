@@ -1,15 +1,17 @@
-# React + TypeScript + Vite
+# Filmes TMDB
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação construída com React, Typescript que permita aos usuários explorar filmes, criar listas personalizadas de favoritos e descobrir novos conteúdos através da API do The Movie Database (TMDB).
 
-Currently, two official plugins are available:
+## Ferramentas 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+• React 18+ 
+• TypeScript 
+• React Router 
+• Context API 
+• Fetch
+• Tailwind CSS
+• Testes unitários (React Testing Library)
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
 ## Expanding the ESLint configuration
 
