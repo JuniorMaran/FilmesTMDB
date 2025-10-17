@@ -7,12 +7,12 @@ interface BoxImageProps {
     size: 'w300' | 'original';
 }
 
- 
+
 export const BoxImage: React.FC <BoxImageProps> = ({ moviePosterPath, size }) => {
 
     if (!moviePosterPath) {
         return (
-            <div className="w-full bg-gray-700 rounded-md flex items-center justify-center" style={{ aspectRatio: '2/3' }}>
+            <div className="w-full bg-gray-700 rounded-md flex items-center justify-center max-h-[450px]">
                 <div className="flex flex-col items-center justify-center">
                     <MdImageNotSupported className="w-12 h-12 text-gray-400 mb-2" />
                     <p className="text-gray-400 text-sm text-center px-2">Imagem não disponível</p>
@@ -22,7 +22,7 @@ export const BoxImage: React.FC <BoxImageProps> = ({ moviePosterPath, size }) =>
     }
 
     return (
-        <div className="w-full overflow-hidden rounded-md" style={{ aspectRatio: '2/3' }}>
+        <div className="w-full overflow-hidden rounded-md max-h-[450px]">
             <img
                 src={tmdbService.getImagePath(moviePosterPath, size) || undefined}
                 alt="Poster do filme"
