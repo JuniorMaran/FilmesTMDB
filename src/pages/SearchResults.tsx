@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearch } from '@/contexts/SearchContext';
 import { tmdbService, type MoviePopularResults } from '@/services/tmdbService';
 import { SearchResultsHeader } from '@/components/organisms/SearchResultsHeader';
+import { Pagination } from '@/components/organisms/Pagination';
 import { MovieBox } from '@/components/molecules/MovieBox';
 import { EmptyState } from '@/components/atoms/EmptyState';
 
@@ -79,32 +80,12 @@ export const SearchResults: React.FC = () => {
                             ))}
                         </div>
 
-                        {/* Paginação */}
-                        {totalPages > 1 && (
-                            <div className="flex justify-center items-center gap-4 mt-8 mb-8">
-                                <button
-                                    onClick={() => loadSearchResults(currentPage - 1)}
-                                    disabled={currentPage === 1 || isLoading}
-                                    className="px-4 py-2 bg-[var(--primary-color)] text-[var(--secundary-color)] rounded-md hover:bg-opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                                >
-                                    ← Anterior
-                                </button>
-
-                                <div className="flex items-center gap-2">
-                                    <span className="text-[var(--secundary-color)]">
-                                        Página {currentPage} de {totalPages}
-                                    </span>
-                                </div>
-
-                                <button
-                                    onClick={() => loadSearchResults(currentPage + 1)}
-                                    disabled={currentPage === totalPages || isLoading}
-                                    className="px-4 py-2 bg-[var(--primary-color)] text-[var(--secundary-color)] rounded-md hover:bg-opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                                >
-                                    Próxima →
-                                </button>
-                            </div>
-                        )}
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            isLoading={isLoading}
+                            onPageChange={loadSearchResults}
+                        />
                     </>
                 )}
             </div>
