@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 interface PageButtonProps {
     page: string;
+    customPath?: string;
 }
 
 interface PageConfigType {
@@ -17,16 +18,15 @@ const pageConfig: PageConfigType = {
     explorer: { name: 'Explorar Filmes', path: '/' },
 };
 
-export const PageButton: React.FC<PageButtonProps> = ({ page }) => {
+export const PageButton: React.FC<PageButtonProps> = ({ page, customPath }) => {
     const { name: pageName, path } = pageConfig[page] || { name: page, path: '/not-found' };
+    const finalPath = customPath || path;
 
     return (
-        <div className="flex">
-            <Link to={path}>
-                <button className="btn-primary">
-                    {pageName}
-                </button>
-            </Link>
-        </div>
+        <Link to={finalPath}>
+            <button className="btn-primary">
+                {pageName}
+            </button>
+        </Link>
     );
 };
