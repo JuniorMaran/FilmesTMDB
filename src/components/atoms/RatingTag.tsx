@@ -16,7 +16,7 @@ export const RatingTag: React.FC<RatingTagProps> = ({ rating }) => {
     }
 
     return (
-        <span className={`inline-block rounded-full px-2 text-sm font-semibold ${ratingClass} text-[var(--primary-color)]`}>
+        <span className={`w-fit inline-block rounded-full px-2 text-sm font-semibold ${ratingClass} text-[var(--primary-color)]`}>
             {rating?.toFixed(1)}
         </span>
     );

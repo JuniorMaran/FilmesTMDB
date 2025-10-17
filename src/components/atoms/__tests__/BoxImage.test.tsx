@@ -36,10 +36,10 @@ describe('BoxImage', () => {
     expect(imgContainer).toBeInTheDocument();
   });
 
-  it('should have max-height class for consistent sizing', () => {
+  it('should have height class for consistent sizing', () => {
     const { container } = render(<BoxImage moviePosterPath="/test.jpg" size="w300" />);
 
-    const imgContainer = container.querySelector('.max-h-\\[450px\\]');
+    const imgContainer = container.querySelector('.h-\\[300px\\]');
     expect(imgContainer).toBeInTheDocument();
   });
 

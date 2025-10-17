@@ -3,6 +3,8 @@ import { apiService } from '@/services/api';
 interface MoviePopularResponse {
     results: MoviePopularResults[];
     total_results?: number;
+    total_pages?: number;
+    page?: number;
 };
 
 export interface MoviePopularResults {
@@ -45,12 +47,13 @@ export class TmdbService {
             throw error;
         }
     }
-    async searchMovies(query: string): Promise<MoviePopularResponse> {
+    async searchMovies(query: string, page: number = 1): Promise<MoviePopularResponse> {
         try {
             return apiService.get<MoviePopularResponse>('/search/movie', {
                 params: {
                     api_key: this.token,
                     query,
+                    page,
                 }
             });
         } catch (error) {

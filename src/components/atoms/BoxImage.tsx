@@ -12,7 +12,7 @@ export const BoxImage: React.FC <BoxImageProps> = ({ moviePosterPath, size }) =>
 
     if (!moviePosterPath) {
         return (
-            <div className="w-full bg-gray-700 rounded-md flex items-center justify-center max-h-[450px]">
+            <div className="w-full bg-gray-700 rounded-md flex items-center justify-center h-[150px] sm:h-[200px] lg:h-[280px] aspect-[2/3]">
                 <div className="flex flex-col items-center justify-center">
                     <MdImageNotSupported className="w-12 h-12 text-gray-400 mb-2" />
                     <p className="text-gray-400 text-sm text-center px-2">Imagem não disponível</p>
@@ -22,7 +22,7 @@ export const BoxImage: React.FC <BoxImageProps> = ({ moviePosterPath, size }) =>
     }
 
     return (
-        <div className="w-full overflow-hidden rounded-md max-h-[450px]">
+        <div className="w-full overflow-hidden rounded-md h-[150px] sm:h-[200px] lg:h-[280px] aspect-[2/3]">
             <img
                 src={tmdbService.getImagePath(moviePosterPath, size) || undefined}
                 alt="Poster do filme"

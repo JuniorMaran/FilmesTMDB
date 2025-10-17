@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useFavoriteMovies } from '@/contexts/FavoriteMoviesContext';
-import { FavoriteMovieBox } from '@/components/molecules/FavoriteMovieBox';
+import { MovieBox } from '@/components/molecules/MovieBox';
 import { Filter, type SortOption } from '@/components/organisms/Filter';
 import { EmptyState } from '@/components/atoms/EmptyState';
 
@@ -47,9 +47,9 @@ export const Favorites: React.FC = () => {
               itemLabel="filme"
             />
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-4 auto-rows-max">
               {sortedMovies.map((movie) => (
-                <FavoriteMovieBox key={movie.id} movie={movie} />
+                <MovieBox key={movie.id} movie={movie} variant="favorite" />
               ))}
             </div>
           </>
