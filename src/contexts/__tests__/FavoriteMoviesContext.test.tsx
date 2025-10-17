@@ -8,21 +8,6 @@ const mockMovie: MoviePopularResults = {
   title: 'Test Movie',
   poster_path: '/test.jpg',
   vote_average: 8.5,
-  overview: 'Test overview',
-  release_date: '2024-01-01',
-  genre_ids: [1, 2],
-  original_language: 'en',
-  original_title: 'Test Movie',
-  popularity: 100,
-  video: false,
-  backdrop_path: '/backdrop.jpg',
-  adult: false,
-};
-
-const mockMovie2: MoviePopularResults = {
-  ...mockMovie,
-  id: 2,
-  title: 'Test Movie 2',
 };
 
 function TestComponent() {

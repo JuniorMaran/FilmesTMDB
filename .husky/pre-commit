@@ -1,0 +1,31 @@
+echo "🔍 Validando código antes do commit..."
+
+# Executar TypeScript check
+echo "📝 Verificando TypeScript..."
+npm run build 2>&1
+if [ $? -ne 0 ]; then
+  echo "❌ Erros de TypeScript encontrados!"
+  echo "Por favor, corrija os erros acima antes de fazer commit."
+  exit 1
+fi
+
+# Executar ESLint
+echo "🔎 Verificando ESLint..."
+npx lint-staged
+if [ $? -ne 0 ]; then
+  echo "❌ Erros de ESLint encontrados!"
+  echo "Por favor, corrija os erros acima antes de fazer commit."
+  exit 1
+fi
+
+# Executar testes
+echo "🧪 Executando testes..."
+npm run test -- --run 2>&1
+if [ $? -ne 0 ]; then
+  echo "❌ Testes falharam!"
+  echo "Por favor, corrija os testes antes de fazer commit."
+  exit 1
+fi
+
+echo "✅ Todas as validações passaram! Commit permitido."
+
