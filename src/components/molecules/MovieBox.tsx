@@ -76,18 +76,20 @@ export const MovieBox: React.FC<MovieBoxProps> = ({ movie, variant = 'default' }
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
             >
+                <div className="absolute top-3 left-3">
+                    <RatingTag rating={movie.vote_average}/>
+                </div>
                 <div className="relative">
                     {renderButton()}
                 </div>
-                <BoxImage moviePosterPath={movie.poster_path} size='w300'/>
-                <div className='p-3 flex flex-col flex-grow bg-white rounded-b-md'>
+                <BoxImage moviePosterPath={movie.poster_path} size="w300" />
+                <div className="p-3 flex flex-col flex-grow bg-white rounded-b-md">
                     <p
                         className="line-clamp-2 text-md leading-5 h-[2.5rem] text-[var(--primary-color)] flex-grow"
                         title={movie.title}
                     >
                         {renderTitle()}
                     </p>
-                    <RatingTag rating={movie.vote_average} />
                     {isHovered && (
                         <div className="mt-3 pt-3 border-t border-gray-300 animate-fadeIn">
                             {movie.release_date && (
