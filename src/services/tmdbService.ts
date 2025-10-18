@@ -5,7 +5,7 @@ interface MoviePopularResponse {
     total_results?: number;
     total_pages?: number;
     page?: number;
-};
+}
 
 export interface MoviePopularResults {
     id: number;
@@ -25,7 +25,21 @@ export interface MovieByIdResponse {
     release_date: string;
     vote_average: number;
     overview: string;
+}
 
+export interface MovieReviewResult {
+    id: string;
+    author: string;
+    content: string;
+    created_at: string;
+    rating?: number;
+    url: string;
+}
+
+interface MovieReviewResponse {
+    results: MovieReviewResult[];
+    total_results?: number;
+    total_pages?: number;
 }
 
 export class TmdbService {
@@ -38,9 +52,8 @@ export class TmdbService {
                     api_key: this.token,
                     language: 'pt-BR',
                     page,
-                }
+                },
             });
-
         } catch (error) {
             new Error('Error fetching popular movies');
             throw error;
@@ -49,7 +62,9 @@ export class TmdbService {
 
     async getMovieById(id?: string): Promise<MovieByIdResponse> {
         try {
-            return apiService.get<MovieByIdResponse>(`/movie/${id}`, {params: {api_key: this.token}});
+            return apiService.get<MovieByIdResponse>(`/movie/${id}`, {
+                params: { api_key: this.token, language: 'pt-BR' },
+            });
         } catch (error) {
             new Error('Error fetching movie');
             throw error;
@@ -62,7 +77,7 @@ export class TmdbService {
                     api_key: this.token,
                     query,
                     page,
-                }
+                },
             });
         } catch (error) {
             new Error('Error searching movies');
@@ -70,18 +85,44 @@ export class TmdbService {
         }
     }
 
-    getImagePath(image: string, size: string): string { 
+    async getSimilarMovies(movieId: number): Promise<MoviePopularResponse> {
+        try {
+            return apiService.get<MoviePopularResponse>(`/movie/${String(movieId)}/similar`, {
+                params: {
+                    api_key: this.token,
+                    language: 'pt-BR',
+                },
+            });
+        } catch (error) {
+            new Error('Error fetching similar movies');
+            throw error;
+        }
+    }
+
+    async getMovieReviews(movieId: number): Promise<MovieReviewResponse> {
+        try {
+            return apiService.get<MovieReviewResponse>(`/movie/${String(movieId)}/reviews`, {
+                params: {
+                    api_key: this.token,
+                    language: 'pt-BR',
+                },
+            });
+        } catch (error) {
+            new Error('Error fetching movie reviews');
+            throw error;
+        }
+    }
+
+    getImagePath(image: string, size: string): string {
         try {
             const imageUrl = import.meta.env.VITE_TMDB_IMAGE_URL;
 
             return `${imageUrl}/${size}${image}`;
-
         } catch (error) {
             new Error('Error fetching image URL');
             throw error;
         }
     }
 }
-
 
 export const tmdbService = new TmdbService();

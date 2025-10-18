@@ -8,6 +8,8 @@ import { formatDate } from '@/utils/dateUtils';
 import { tmdbService, type MovieByIdResponse } from '@/services/tmdbService';
 import { FavoriteButton } from '@/components/atoms/FavoriteButton';
 import { useFavoriteMovies } from '@/contexts/FavoriteMoviesContext';
+import { SimilarGrid } from '@/components/organisms/SimilarGrid';
+import { MovieReview } from '@/components/organisms/MovieReview';
 
 export const MovieDetails: React.FC = () => {
     const [movieById, setMovieById] = useState<MovieByIdResponse>({} as MovieByIdResponse);
@@ -15,15 +17,6 @@ export const MovieDetails: React.FC = () => {
 
     const { id } = useParams();
     const favorite = isFavorite(Number(id));
-
-    const loadMoviePopularData = async () => {
-        try {
-            const response = await tmdbService.getMovieById(id);
-            setMovieById(response);
-        } catch (error) {
-            console.error('Error fetching movies:', error);
-        }
-    };
 
     const handleFavoriteClick = () => {
         if (favorite) {
@@ -34,37 +27,50 @@ export const MovieDetails: React.FC = () => {
     };
 
     useEffect(() => {
+        const loadMoviePopularData = async () => {
+            try {
+                const response = await tmdbService.getMovieById(id);
+                setMovieById(response);
+            } catch (error) {
+                console.error('Error fetching movies:', error);
+            }
+        };
+
         loadMoviePopularData();
-    // eslint-disable-next-line
-    }, []);
+    }, [id]);
 
     return (
-        <div className="flex mx-10 flex-col sm:flex-row align-items-center justify-center mt-10 mb-10">
-            <div className="w-full sm:w-1/2 mr-5 self-center max-w-lg">
-                <BoxImage moviePosterPath={movieById?.backdrop_path} size="original" />
-            </div>
-            <div className="w-full sm:w-1/2 ml-5 max-w-lg">
-                <p className="text-2xl font-bold mb-2">{movieById?.title}</p>
-                <div className="mb-2 flex flex-wrap">
-                    {movieById?.genres &&
-                        movieById.genres.map((genre) => <GenreTag genre={genre.name} />)}
+        <>
+            <div className="flex mx-10 flex-col sm:flex-row align-items-center justify-center sm:gap-10 mt-10 mb-10 ">
+                <div className="w-full sm:w-1/2 self-center max-w-lg">
+                    <BoxImage moviePosterPath={movieById?.backdrop_path} size="original" />
                 </div>
-                <div className="font-bold">
-                    Data de lançamento:
-                    <span className="font-light"> { movieById?.release_date ? formatDate(movieById?.release_date, 'DD [de] MMMM [de] YYYY') : 'Não informada'} </span>
-                </div>
-                <div className="mb-2 font-bold">
-                    Nota TMDB: <RatingTag rating={movieById?.vote_average} />
-                </div>
+                <div className="w-full sm:w-1/2 max-w-lg">
+                    <p className="text-2xl font-bold mb-2">{movieById?.title}</p>
+                    <div className="mb-2 flex flex-wrap">
+                        {movieById?.genres &&
+                            movieById.genres.map((genre) => <GenreTag genre={genre.name} />)}
+                    </div>
+                    <div className="font-bold">
+                        Data de lançamento:
+                        <span className="font-light"> { movieById?.release_date ? formatDate(movieById?.release_date, 'DD [de] MMMM [de] YYYY') : 'Não informada'} </span>
+                    </div>
+                    <div className="mb-2 font-bold">
+                        Nota TMDB: <RatingTag rating={movieById?.vote_average} />
+                    </div>
 
-                <div className="font-bold text-xl">
-                    Sinopse <p className="font-light text-base"> {movieById?.overview || 'Não informada'}</p>
-                </div>
+                    <div className="font-bold text-xl">
+                        Sinopse <p className="font-light text-base"> {movieById?.overview || 'Não informada'}</p>
+                    </div>
 
-                <button onClick={handleFavoriteClick} className="mt-4">
-                    <FavoriteButton favorite={favorite} large />
-                </button>
+                    <button onClick={handleFavoriteClick} className="mt-4">
+                        <FavoriteButton favorite={favorite} large />
+                    </button>
+                </div>
             </div>
-        </div>
+
+            {movieById?.id && <div><MovieReview movieId={movieById.id} /></div>}
+            {movieById?.id && <div><SimilarGrid movieId={movieById.id} /></div>}
+        </>
     );
 };
