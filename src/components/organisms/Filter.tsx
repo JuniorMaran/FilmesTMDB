@@ -16,7 +16,8 @@ export const Filter: React.FC<FilterProps> = ({
   itemLabel = 'filme'
 }) => {
   return (
-    <div className="mb-8 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+    <div className="
+    flex flex-col sm:flex-row gap-4 items-center">
       <label className="text-[var(--primary-color)] font-semibold">Ordenar por:</label>
       <select
         value={sortBy}

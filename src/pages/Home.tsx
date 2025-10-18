@@ -3,10 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { tmdbService } from '@/services/tmdbService';
 import { Pagination } from '@/components/organisms/Pagination';
 import { MovieBox } from '@/components/molecules/MovieBox';
+import { Title } from '@/components/atoms/Title';
 
 export const Home: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     const { data, isLoading } = useQuery({
         queryKey: ['moviePopular', currentPage],
         queryFn: () => tmdbService.getMoviePopular(currentPage),
@@ -24,7 +25,7 @@ export const Home: React.FC = () => {
     return (
         <>
             <div className="mx-8 justify-self-center">
-            <p className="my-10 text-[var(--primary-color)] text-2xl">Todos os Filmes...</p>
+                <Title title="Filmes Populares" />
                 {isLoading ? (
                     <div className="flex justify-center py-20">
                         <p className="text-[var(--primary-color)]">Carregando filmes...</p>

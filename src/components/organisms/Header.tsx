@@ -1,6 +1,6 @@
 import React from 'react';
 import { Logo } from '@/components/atoms/Logo';
-import { InputSearch } from '@/components/atoms/InputSearch';
+import { InputSearch } from '@/components/molecules/InputSearch';
 import { PageButton } from '@/components/atoms/PageButton';
 
 export const Header: React.FC = () => {
