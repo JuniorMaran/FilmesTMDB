@@ -16,6 +16,8 @@ const mockMovie = {
   title: 'Test Movie',
   poster_path: '/test.jpg',
   vote_average: 8.5,
+  overview: 'This is a test movie',
+  release_date: '2024-01-01',
 };
 
 const renderWithProviders = (component: React.ReactElement) => {

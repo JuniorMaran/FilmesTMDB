@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 
-export const getCompleteDate = (date: string) => {
+export const formatDate = (date: string, format: string = 'DD/MM/YYYY') => {
     dayjs.locale('pt-br');
-    return dayjs(date).format('DD [de] MMMM [de] YYYY');
+    return dayjs(date).format(format);
 };

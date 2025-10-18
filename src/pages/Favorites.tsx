@@ -47,7 +47,7 @@ export const Favorites: React.FC = () => {
               itemLabel="filme"
             />
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-5 sm:gap-4 auto-rows-max">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-5 sm:gap-4 auto-rows-max overflow-visible">
               {sortedMovies.map((movie) => (
                 <MovieBox key={movie.id} movie={movie} variant="favorite" />
               ))}

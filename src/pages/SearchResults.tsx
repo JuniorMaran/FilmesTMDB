@@ -62,7 +62,7 @@ export const SearchResults: React.FC = () => {
                     />
                 ) : (
                     <>
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5 mb-8 auto-rows-max">
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5 mb-8 auto-rows-max overflow-visible">
                             {movies.map((movie) => (
                                 <MovieBox key={movie.id} movie={movie} variant="search" />
                             ))}

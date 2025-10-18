@@ -12,6 +12,8 @@ export interface MoviePopularResults {
     title: string;
     poster_path: string;
     vote_average: number;
+    overview: string;
+    release_date: string;
 }
 
 export interface MovieByIdResponse {
@@ -34,6 +36,7 @@ export class TmdbService {
             return apiService.get<MoviePopularResponse>('/movie/popular', {
                 params: {
                     api_key: this.token,
+                    language: 'pt-BR',
                     page,
                 }
             });

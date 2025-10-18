@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { BoxImage } from '@/components/atoms/BoxImage';
 import { GenreTag } from '@/components/atoms/GenreTag';
 import { RatingTag } from '@/components/atoms/RatingTag';
-import { getCompleteDate } from '@/utils/dateUtils';
+import { formatDate } from '@/utils/dateUtils';
 import { tmdbService, type MovieByIdResponse } from '@/services/tmdbService';
 import { FavoriteButton } from '@/components/atoms/FavoriteButton';
 import { useFavoriteMovies } from '@/contexts/FavoriteMoviesContext';
@@ -51,7 +51,7 @@ export const MovieDetails: React.FC = () => {
                 </div>
                 <div className="font-bold">
                     Data de lançamento:
-                    <span className="font-light"> { movieById?.release_date ? getCompleteDate(movieById?.release_date) : 'Não informada'} </span>
+                    <span className="font-light"> { movieById?.release_date ? formatDate(movieById?.release_date, 'DD [de] MMMM [de] YYYY') : 'Não informada'} </span>
                 </div>
                 <div className="mb-2 font-bold">
                     Nota TMDB: <RatingTag rating={movieById?.vote_average} />
