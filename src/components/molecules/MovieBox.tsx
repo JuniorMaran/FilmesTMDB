@@ -54,7 +54,7 @@ export const MovieBox: React.FC<MovieBoxProps> = ({ movie, variant = 'default' }
         }
 
         return (
-            <button className="absolute top-0 right-0" onClick={handleFavoriteClick}>
+            <button className="absolute top-3 right-3" onClick={handleFavoriteClick}>
                 <FavoriteButton favorite={favorite} />
             </button>
         );
@@ -69,7 +69,7 @@ export const MovieBox: React.FC<MovieBoxProps> = ({ movie, variant = 'default' }
 
     return (
         <Link to={`/movie/${movie.id}`}>
-            <div className="flex flex-col h-full m-1 shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-md">
+            <div className="flex flex-col h-full shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-md">
                 <div className="relative">
                     {renderButton()}
                 </div>

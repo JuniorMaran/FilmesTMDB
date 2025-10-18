@@ -40,7 +40,7 @@ export const MovieDetails: React.FC = () => {
 
     return (
         <div className="flex mx-10 flex-col sm:flex-row align-items-center justify-center mt-10 mb-10">
-            <div className="w-full sm:w-1/2 mr-5  max-w-lg">
+            <div className="w-full sm:w-1/2 mr-5 self-center max-w-lg">
                 <BoxImage moviePosterPath={movieById?.backdrop_path} size="original" />
             </div>
             <div className="w-full sm:w-1/2 ml-5 max-w-lg">

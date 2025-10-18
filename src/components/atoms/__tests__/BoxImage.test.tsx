@@ -63,5 +63,13 @@ describe('BoxImage', () => {
     const imgContainer = container.querySelector('.rounded-md');
     expect(imgContainer).toBeInTheDocument();
   });
+
+  it('should have onLoad and onError handlers on image', () => {
+    render(<BoxImage moviePosterPath="/test.jpg" size="w300" />);
+
+    const img = screen.getByAltText('Poster do filme') as HTMLImageElement;
+    expect(img.onload).toBeDefined();
+    expect(img.onerror).toBeDefined();
+  });
 });
 

@@ -23,15 +23,15 @@ export const Home: React.FC = () => {
 
     return (
         <>
-            <p className="m-10 text-[var(--primary-color)] text-2xl">Todos os Filmes...</p>
-            <div className="m-2 sm:m-10">
+            <p className="mx-20 my-10 text-[var(--primary-color)] text-2xl">Todos os Filmes...</p>
+            <div className="mx-20">
                 {isLoading ? (
                     <div className="flex justify-center py-20">
                         <p className="text-[var(--primary-color)]">Carregando filmes...</p>
                     </div>
                 ) : (
                     <>
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 mb-8 auto-rows-max">
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5 mb-8 auto-rows-max">
                             {moviePopular.length > 0 &&
                                 moviePopular.map((movie) => <MovieBox movie={movie} />)}
                         </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { MdImageNotSupported } from 'react-icons/md';
 
 import { tmdbService } from '@/services/tmdbService';
