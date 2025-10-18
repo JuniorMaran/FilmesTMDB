@@ -1,7 +1,4 @@
 @import "tailwindcss";
-@import 'swiper/css';
-@import 'swiper/css/grid';
-@import 'swiper/css/navigation';
 
 @font-face {
   font-family: 'Roboto';
@@ -55,17 +52,5 @@ input {
   color: var(--primary-color);
 }
 input:focus {
-
   opacity: 1;
-}
-
-
-.swiper-button-prev, .swiper-button-next {
-  color: var(--primary-color);
-  background-color: var(--secundary-color);
-  border: 2px solid var(--primary-color);
-  padding: 10px;
-  border-radius: 50%;
-  justify-content: center;
-  align-items: center;
 }

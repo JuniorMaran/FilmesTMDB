@@ -1,42 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useSearch } from '@/contexts/SearchContext';
-import { tmdbService, type MoviePopularResults } from '@/services/tmdbService';
+import { tmdbService } from '@/services/tmdbService';
 import { SearchResultsHeader } from '@/components/organisms/SearchResultsHeader';
+import { Pagination } from '@/components/organisms/Pagination';
 import { MovieBox } from '@/components/molecules/MovieBox';
 import { EmptyState } from '@/components/atoms/EmptyState';
 
 export const SearchResults: React.FC = () => {
     const { searchTerm } = useSearch();
-    const [movies, setMovies] = useState<MoviePopularResults[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [totalResults, setTotalResults] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
 
-    const loadSearchResults = async (page: number = 1) => {
-        if (!searchTerm.trim()) return;
+    const { data, isLoading } = useQuery({
+        queryKey: ['searchMovies', searchTerm, currentPage],
+        queryFn: () => tmdbService.searchMovies(searchTerm, currentPage),
+        enabled: !!searchTerm.trim(),
+        staleTime: 1000 * 60 * 5,
+    });
 
-        try {
-            setIsLoading(true);
-            const response = await tmdbService.searchMovies(searchTerm, page);
-            setMovies(response.results || []);
-            setTotalResults(response.total_results || 0);
-            setTotalPages(response.total_pages || 0);
-            setCurrentPage(page);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        } catch (error) {
-            console.error('Error searching movies:', error);
-            setMovies([]);
-        } finally {
-            setIsLoading(false);
-        }
+    const movies = data?.results || [];
+    const totalResults = data?.total_results || 0;
+    const totalPages = data?.total_pages || 0;
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
-
-    useEffect(() => {
-        setCurrentPage(1);
-        loadSearchResults(1);
-        // eslint-disable-next-line
-    }, [searchTerm]);
 
     if (!searchTerm.trim()) {
         return (
@@ -73,38 +62,17 @@ export const SearchResults: React.FC = () => {
                     />
                 ) : (
                     <>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4 mb-8 auto-rows-max">
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 mb-8 auto-rows-max">
                             {movies.map((movie) => (
                                 <MovieBox key={movie.id} movie={movie} variant="search" />
                             ))}
                         </div>
-
-                        {/* Paginação */}
-                        {totalPages > 1 && (
-                            <div className="flex justify-center items-center gap-4 mt-8 mb-8">
-                                <button
-                                    onClick={() => loadSearchResults(currentPage - 1)}
-                                    disabled={currentPage === 1 || isLoading}
-                                    className="px-4 py-2 bg-[var(--primary-color)] text-[var(--secundary-color)] rounded-md hover:bg-opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                                >
-                                    ← Anterior
-                                </button>
-
-                                <div className="flex items-center gap-2">
-                                    <span className="text-[var(--secundary-color)]">
-                                        Página {currentPage} de {totalPages}
-                                    </span>
-                                </div>
-
-                                <button
-                                    onClick={() => loadSearchResults(currentPage + 1)}
-                                    disabled={currentPage === totalPages || isLoading}
-                                    className="px-4 py-2 bg-[var(--primary-color)] text-[var(--secundary-color)] rounded-md hover:bg-opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                                >
-                                    Próxima →
-                                </button>
-                            </div>
-                        )}
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            isLoading={isLoading}
+                            onPageChange={handlePageChange}
+                        />
                     </>
                 )}
             </div>

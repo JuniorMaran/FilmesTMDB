@@ -8,7 +8,7 @@ interface FavoriteButtonProps {
 
 export const FavoriteButton: React.FC<FavoriteButtonProps> = ({ favorite, large }) => {
     return (
-        <div className="rounded-full p-2 m-1 cursor-pointer bg-[var(--secundary-color)] inline-flex items-center space-x-2">
+        <div className="rounded-full p-2 m-1 cursor-pointer inline-flex items-center space-x-2">
             {favorite ? (
                 <AiFillHeart className="text-red-500 w-6 h-6" />
             ) : (

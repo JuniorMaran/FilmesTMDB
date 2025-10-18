@@ -136,7 +136,7 @@ describe('MovieBox', () => {
     it('should have correct card styling', () => {
       const { container } = renderWithProviders(<MovieBox movie={mockMovie} />);
 
-      const card = container.querySelector('.bg-\\[var\\(--primary-color\\)\\]');
+      const card = container.querySelector('.h-full');
       expect(card).toBeInTheDocument();
     });
 

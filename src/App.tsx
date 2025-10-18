@@ -1,9 +1,19 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import Layout from '@/components/Layout';
 import { FavoriteMoviesProvider } from '@/contexts/FavoriteMoviesContext';
 import { SearchProvider } from '@/contexts/SearchContext';
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 1000 * 60 * 5,
+            gcTime: 1000 * 60 * 10,
+        },
+    },
+});
 
 const Home = React.lazy(() => import('@/pages/Home').then((module) => ({ default: module.Home })));
 const Favorites = React.lazy(() =>
@@ -43,13 +53,15 @@ const AppRoutes: React.FC = () => {
 
 const App: React.FC = () => {
     return (
-        <FavoriteMoviesProvider>
-            <SearchProvider>
-                <Router>
-                    <AppRoutes />
-                </Router>
-            </SearchProvider>
-        </FavoriteMoviesProvider>
+        <QueryClientProvider client={queryClient}>
+            <FavoriteMoviesProvider>
+                <SearchProvider>
+                    <Router>
+                        <AppRoutes />
+                    </Router>
+                </SearchProvider>
+            </FavoriteMoviesProvider>
+        </QueryClientProvider>
     );
 };
 

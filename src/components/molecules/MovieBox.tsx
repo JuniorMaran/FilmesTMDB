@@ -69,20 +69,23 @@ export const MovieBox: React.FC<MovieBoxProps> = ({ movie, variant = 'default' }
 
     return (
         <Link to={`/movie/${movie.id}`}>
-            <div className="flex flex-col h-full p-3 m-1 sm:m-5 bg-[var(--primary-color)] rounded-md">
+            <div className="flex flex-col h-full m-1 shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-md">
                 <div className="relative">
                     {renderButton()}
                 </div>
 
                 <BoxImage moviePosterPath={movie.poster_path} size='w300'/>
-
+                <div className='p-3'>
                 <p
-                    className="line-clamp-2 text-md leading-5 min-h-[2.5rem] mt-[12px] text-[var(--secundary-color)] flex-grow"
+                    className="line-clamp-2 text-md leading-5 h-[2.5rem] text-[var(--primary-color)] flex-grow"
                     title={movie.title}
                 >
                     {renderTitle()}
                 </p>
                 <RatingTag rating={movie.vote_average} />
+
+                </div>
+
             </div>
         </Link>
     );

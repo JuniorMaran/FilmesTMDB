@@ -1,57 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Grid, Navigation } from 'swiper/modules';
-
-import { tmdbService, type MoviePopularResults } from '@/services/tmdbService';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { tmdbService } from '@/services/tmdbService';
+import { Pagination } from '@/components/organisms/Pagination';
 import { MovieBox } from '@/components/molecules/MovieBox';
 
 export const Home: React.FC = () => {
-    const [moviePopular, setMoviePopular] = useState<MoviePopularResults[]>([]);
-    const loadMoviePopularData = async () => {
-        try {
-            const response = await tmdbService.getMoviePopular();
-            setMoviePopular(response?.results);
-        } catch (error) {
-            console.error('Error fetching popular movies:', error);
-        }
-    };
+    const [currentPage, setCurrentPage] = useState(1);
+    
+    const { data, isLoading } = useQuery({
+        queryKey: ['moviePopular', currentPage],
+        queryFn: () => tmdbService.getMoviePopular(currentPage),
+        staleTime: 1000 * 60 * 5,
+    });
 
-    useEffect(() => {
-        loadMoviePopularData();
-    }, []);
+    const moviePopular = data?.results || [];
+    const totalPages = data?.total_pages || 0;
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     return (
         <>
-        
-        <p className='m-10 text-[var(--primary-color)] text-2xl'>Filmes em Cartaz...</p>
-        <div className="m-2 sm:m-10">
-            <Swiper
-                navigation={true}
-                grid={{ rows: 2, fill: 'row' }}
-                pagination={{
-                    clickable: true,
-                }}
-                breakpoints={{
-                    1: {
-                        slidesPerView: 2,
-                    },
-                    768: {
-                        slidesPerView: 3,
-                    },
-                    1024: {
-                        slidesPerView: 6
-                    },
-                }}
-                modules={[Grid, Navigation]}
-            >
-                {moviePopular.length > 0 &&
-                    moviePopular.map((movie) => (
-                        <SwiperSlide >
-                            <MovieBox key={movie.id} movie={movie} />
-                        </SwiperSlide>
-                    ))}
-            </Swiper>
-        </div>
+            <p className="m-10 text-[var(--primary-color)] text-2xl">Todos os Filmes...</p>
+            <div className="m-2 sm:m-10">
+                {isLoading ? (
+                    <div className="flex justify-center py-20">
+                        <p className="text-[var(--primary-color)]">Carregando filmes...</p>
+                    </div>
+                ) : (
+                    <>
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 mb-8 auto-rows-max">
+                            {moviePopular.length > 0 &&
+                                moviePopular.map((movie) => <MovieBox movie={movie} />)}
+                        </div>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            isLoading={isLoading}
+                            onPageChange={handlePageChange}
+                        />
+                    </>
+                )}
+            </div>
         </>
     );
 };

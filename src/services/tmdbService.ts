@@ -29,10 +29,15 @@ export interface MovieByIdResponse {
 export class TmdbService {
     private token = import.meta.env.VITE_TMDB_KEY;
 
-    async getMoviePopular(): Promise<MoviePopularResponse> {
+    async getMoviePopular(page: number = 1): Promise<MoviePopularResponse> {
         try {
-            return apiService.get<MoviePopularResponse>('/movie/popular', {params: {api_key: this.token}});
-            
+            return apiService.get<MoviePopularResponse>('/movie/popular', {
+                params: {
+                    api_key: this.token,
+                    page,
+                }
+            });
+
         } catch (error) {
             new Error('Error fetching popular movies');
             throw error;
