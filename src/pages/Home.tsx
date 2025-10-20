@@ -34,7 +34,9 @@ export const Home: React.FC = () => {
                     <>
                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-[2vw] mb-8 auto-rows-max overflow-visible">
                             {moviePopular.length > 0 &&
-                                moviePopular.map((movie) => <MovieBox movie={movie} />)}
+                                moviePopular.map((movie) => (
+                                    <MovieBox key={movie.id} movie={movie} />
+                                ))}
                         </div>
                         <Pagination
                             currentPage={currentPage}
