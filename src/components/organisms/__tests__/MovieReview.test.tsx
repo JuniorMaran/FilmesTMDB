@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
 import type { Mock } from 'vitest';
 import { tmdbService } from '@/services/tmdbService';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -42,6 +42,14 @@ vi.mock('@/utils/dateUtils', () => ({
 }));
 
 describe('MovieReview', () => {
+    let consoleErrorSpy: any;
+    beforeAll(() => {
+        consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    });
+    afterAll(() => {
+        consoleErrorSpy.mockRestore();
+    });
+
     beforeEach(() => {
         vi.clearAllMocks();
     });

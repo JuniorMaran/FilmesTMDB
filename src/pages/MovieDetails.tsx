@@ -49,7 +49,9 @@ export const MovieDetails: React.FC = () => {
                     <p className="text-2xl font-bold mb-2">{movieById?.title}</p>
                     <div className="mb-2 flex flex-wrap">
                         {movieById?.genres &&
-                            movieById.genres.map((genre) => <GenreTag genre={genre.name} />)}
+                            movieById.genres.map((genre) => (
+                                <GenreTag key={genre.name} genre={genre.name} />
+                            ))}
                     </div>
                     <div className="font-bold">
                         Data de lançamento:
