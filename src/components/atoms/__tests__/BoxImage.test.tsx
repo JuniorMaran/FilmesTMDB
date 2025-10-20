@@ -39,7 +39,7 @@ describe('BoxImage', () => {
   it('should have height class for consistent sizing', () => {
     const { container } = render(<BoxImage moviePosterPath="/test.jpg" size="w300" />);
 
-    const imgContainer = container.querySelector('.h-\\[150px\\]');
+    const imgContainer = container.querySelector('.h-\\[300px\\]');
     expect(imgContainer).toBeInTheDocument();
   });
 

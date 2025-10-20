@@ -12,6 +12,9 @@ const mockReviews = [
         created_at: '2024-01-01T10:00:00.000Z',
         rating: 8,
         url: 'https://example.com/review/1',
+        author_details: {
+            avatar_path: '/avatar1.jpg',
+        },
     },
     {
         id: '2',
@@ -20,6 +23,9 @@ const mockReviews = [
         created_at: '2024-01-02T10:00:00.000Z',
         rating: 9,
         url: 'https://example.com/review/2',
+        author_details: {
+            avatar_path: '/avatar2.jpg',
+        },
     },
     {
         id: '3',
@@ -28,12 +34,16 @@ const mockReviews = [
         created_at: '2024-01-03T10:00:00.000Z',
         rating: 6,
         url: 'https://example.com/review/3',
+            author_details: {
+            avatar_path: '/avatar3.jpg',
+        },
     },
 ];
 
 vi.mock('@/services/tmdbService', () => ({
     tmdbService: {
         getMovieReviews: vi.fn(),
+        getImagePath: (path: string, size: string) => `https://image.tmdb.org/t/p/${size}${path}`,
     },
 }));
 
@@ -55,7 +65,9 @@ describe('MovieReview', () => {
     });
 
     it('should render loading state initially', () => {
-        (tmdbService.getMovieReviews as unknown as Mock).mockImplementation(() => new Promise(() => {}));
+        (tmdbService.getMovieReviews as unknown as Mock).mockImplementation(
+            () => new Promise(() => {})
+        );
 
         render(<MovieReview movieId={1} />);
 
@@ -63,7 +75,9 @@ describe('MovieReview', () => {
     });
 
     it('should render reviews after loading', async () => {
-        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: mockReviews });
+        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({
+            results: mockReviews,
+        });
 
         render(<MovieReview movieId={1} />);
 
@@ -84,8 +98,11 @@ describe('MovieReview', () => {
             created_at: '2024-01-01T10:00:00.000Z',
             rating: 7,
             url: `https://example.com/review/${i + 1}`,
+            author_details: { avatar_path: `/avatar${i + 1}.jpg` },
         }));
-        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: manyReviews });
+        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({
+            results: manyReviews,
+        });
 
         render(<MovieReview movieId={1} />);
 
@@ -118,7 +135,9 @@ describe('MovieReview', () => {
     });
 
     it('should call getMovieReviews with correct movieId', async () => {
-        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: mockReviews });
+        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({
+            results: mockReviews,
+        });
 
         render(<MovieReview movieId={123} />);
 
@@ -128,7 +147,9 @@ describe('MovieReview', () => {
     });
 
     it('should reload when movieId changes', async () => {
-        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: mockReviews });
+        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({
+            results: mockReviews,
+        });
 
         const { rerender } = render(<MovieReview movieId={1} />);
 
@@ -146,7 +167,9 @@ describe('MovieReview', () => {
     });
 
     it('should display review ratings when available', async () => {
-        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: mockReviews });
+        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({
+            results: mockReviews,
+        });
 
         render(<MovieReview movieId={1} />);
 
@@ -158,15 +181,16 @@ describe('MovieReview', () => {
     });
 
     it('should have links to full reviews', async () => {
-        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: mockReviews });
+        (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({
+            results: mockReviews,
+        });
 
         render(<MovieReview movieId={1} />);
 
         await waitFor(() => {
-            const links = screen.getAllByText('Ler avaliação completa →');
+            const links = screen.getAllByText('Ler avaliação completa');
             expect(links).toHaveLength(3);
             expect(links[0]).toHaveAttribute('href', 'https://example.com/review/1');
         });
     });
 });
-

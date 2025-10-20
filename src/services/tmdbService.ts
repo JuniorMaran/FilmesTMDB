@@ -34,6 +34,9 @@ export interface MovieReviewResult {
     created_at: string;
     rating?: number;
     url: string;
+    author_details: {
+        avatar_path: string;
+    };
 }
 
 interface MovieReviewResponse {
