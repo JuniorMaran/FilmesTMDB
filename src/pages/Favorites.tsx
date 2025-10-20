@@ -6,6 +6,7 @@ import { Filter, type SortOption } from '@/components/organisms/Filter';
 import { EmptyState } from '@/components/atoms/EmptyState';
 import { Pagination } from '@/components/organisms/Pagination';
 import { Title } from '@/components/atoms/Title';
+import { RemoveButton } from '@/components/atoms/RemoveButton';
 
 export const Favorites: React.FC = () => {
     const { favoriteMovies, clearAll } = useFavoriteMovies();
@@ -68,15 +69,12 @@ export const Favorites: React.FC = () => {
                                 totalItems={favoriteMovies.length}
                                 itemLabel="filme"
                             />
-                            <button
+                            <RemoveButton
                                 onClick={handleRemoveAllFavorites}
-                                className="w-full sm:w-auto px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-md transition-colors"
                                 title="Remover todos os favoritos"
-                            >
-                                Remover Todos
-                            </button>
+                                text="Remover todos"
+                            />
                         </div>
-
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 mb-8 auto-rows-max overflow-visible">
                             {paginatedMovies.map((movie) => (
                                 <MovieBox key={movie.id} movie={movie} variant="favorite" />

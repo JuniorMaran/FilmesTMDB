@@ -44,12 +44,12 @@ describe('InputSearch', () => {
       </BrowserRouter>
     );
 
-  it('deve renderizar o input de busca', () => {
+  it('should render input search', () => {
     renderWithProviders();
     expect(screen.getByPlaceholderText('Buscar filme...')).toBeInTheDocument();
   });
 
-  it('não deve navegar quando o input está vazio', async () => {
+  it('should not navigate when input is empty', async () => {
     renderWithProviders();
     const input = screen.getByPlaceholderText('Buscar filme...');
 
@@ -59,7 +59,7 @@ describe('InputSearch', () => {
     expect(mockSetSearchTerm).not.toHaveBeenCalled();
   });
 
-  it('deve enviar a busca e navegar para /search quando houver texto', async () => {
+  it('should submit the search and navitgate to /search when there is text', async () => {
     renderWithProviders();
     const input = screen.getByPlaceholderText('Buscar filme...');
 
