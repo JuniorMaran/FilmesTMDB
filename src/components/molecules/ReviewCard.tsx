@@ -1,6 +1,7 @@
 import React from 'react';
 import { type MovieReviewResult } from '@/services/tmdbService';
 import { formatDate } from '@/utils/dateUtils';
+import { Avatar } from '@/components/atoms/Avatar';
 
 interface ReviewCardProps {
     review: MovieReviewResult;
@@ -12,7 +13,8 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
             key={review.id}
             className="bg-white rounded-lg p-6 shadow-md border-l-4 border-[var(--primary-color)] max-w-[500px]"
         >
-            <div className="flex justify-between items-start mb-3">
+            <div className="flex items-start mb-3 gap-2">
+                <Avatar avatar={review.author_details.avatar_path} /> 
                 <div>
                     <p className="font-bold text-[var(--primary-color)]">{review.author}</p>
                     <p className="text-xs text-gray-500">

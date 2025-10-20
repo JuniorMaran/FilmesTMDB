@@ -12,6 +12,7 @@ const mockReviews = [
         created_at: '2024-01-01T10:00:00.000Z',
         rating: 8,
         url: 'https://example.com/review/1',
+        author_details: { avatar_path: '/test.jpg'}
     },
     {
         id: '2',
@@ -20,6 +21,7 @@ const mockReviews = [
         created_at: '2024-01-02T10:00:00.000Z',
         rating: 9,
         url: 'https://example.com/review/2',
+        author_details: { avatar_path: '/test.jpg'}
     },
     {
         id: '3',
@@ -28,12 +30,14 @@ const mockReviews = [
         created_at: '2024-01-03T10:00:00.000Z',
         rating: 6,
         url: 'https://example.com/review/3',
+        author_details: { avatar_path: '/test.jpg'}
     },
 ];
 
 vi.mock('@/services/tmdbService', () => ({
     tmdbService: {
         getMovieReviews: vi.fn(),
+        getImagePath: (path: string) => `https://image.tmdb.org/t/p/w300${path}`,
     },
 }));
 
@@ -84,6 +88,7 @@ describe('MovieReview', () => {
             created_at: '2024-01-01T10:00:00.000Z',
             rating: 7,
             url: `https://example.com/review/${i + 1}`,
+            author_details: { avatar_path: '/test.jpg' },
         }));
         (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: manyReviews });
 

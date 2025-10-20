@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { BoxImage } from '../BoxImage';
+import { BoxImage } from '@/components/atoms/BoxImage';
 
 vi.mock('@/services/tmdbService', () => ({
   tmdbService: {
@@ -39,7 +39,7 @@ describe('BoxImage', () => {
   it('should have height class for consistent sizing', () => {
     const { container } = render(<BoxImage moviePosterPath="/test.jpg" size="w300" />);
 
-    const imgContainer = container.querySelector('.h-\\[150px\\]');
+    const imgContainer = container.querySelector('.h-\\[350px\\]');
     expect(imgContainer).toBeInTheDocument();
   });
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { HighlightedTitle } from '../HighlightedTitle';
+import { HighlightedTitle } from '@/components/atoms/HighlightedTitle';
 
 describe('HighlightedTitle', () => {
   it('should render title without highlight when searchTerm is empty', () => {

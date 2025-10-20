@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { EmptyState } from '../EmptyState';
+import { EmptyState } from '@/components/atoms/EmptyState';
 
 describe('EmptyState', () => {
   it('should render title and description', () => {

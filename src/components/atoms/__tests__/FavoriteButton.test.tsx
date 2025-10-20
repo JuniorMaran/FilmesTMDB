@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
-import { FavoriteButton } from '../FavoriteButton';
+import { FavoriteButton } from '@/components/atoms/FavoriteButton';
 
 const getIcon = (container: HTMLElement) => container.querySelector('svg');
 
