@@ -1,6 +1,6 @@
 import { describe, it, expect, jest } from '@jest/globals';
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { MovieReview } from '@/components/organisms/MovieReview';
 
 jest.mock('@/services/tmdbService', () => ({
@@ -18,13 +18,11 @@ jest.mock('@/services/tmdbService', () => ({
 
 describe('MovieReview', () => {
   it('Renderiza avaliações completas', async () => {
-    render(<MovieReview movieId={1} />);
+    const { findByText, findAllByRole } = render(<MovieReview movieId={1} />);
 
-    await waitFor(() => {
-      expect(screen.getByText(/Avalia/i)).toBeTruthy();
-    });
+    await findByText(/Avalia/i);
 
-    const links = screen.getAllByRole('link');
+    const links = await findAllByRole('link');
     expect(links.length).toBe(3);
   });
 });

@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
 
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 import { FavoriteMoviesProvider, useFavoriteMovies } from '@/contexts/FavoriteMoviesContext';
 
 const DummyMovie = {
@@ -30,33 +31,33 @@ describe('FavoriteMoviesContext', () => {
     localStorage.clear();
   });
 
-  it('adiciona e remove favoritos; clearAll limpa a lista', () => {
-    render(
+  it('adiciona e remove favoritos; clearAll limpa a lista', async () => {
+    const { getByTestId, getByText } = render(
       <FavoriteMoviesProvider>
         <Consumer />
       </FavoriteMoviesProvider>
     );
 
-    const count = () => screen.getByTestId('count').textContent;
-    const flag = () => screen.getByTestId('flag').textContent;
+    const count = () => getByTestId('count').textContent;
+    const flag = () => getByTestId('flag').textContent;
 
     // Inicialmente vazio
     expect(count()).toBe('0');
     expect(flag()).toBe('no');
 
     // Adiciona
-    fireEvent.click(screen.getByText('add'));
+    await act(async () => { getByText('add').click(); });
     expect(count()).toBe('1');
     expect(flag()).toBe('yes');
 
     // Remove
-    fireEvent.click(screen.getByText('remove'));
+    await act(async () => { getByText('remove').click(); });
     expect(count()).toBe('0');
     expect(flag()).toBe('no');
 
     // Adiciona de novo e limpa
-    fireEvent.click(screen.getByText('add'));
-    fireEvent.click(screen.getByText('clear'));
+    await act(async () => { getByText('add').click(); });
+    await act(async () => { getByText('clear').click(); });
     expect(count()).toBe('0');
   });
 });

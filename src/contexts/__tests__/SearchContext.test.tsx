@@ -1,6 +1,7 @@
 import { describe, it, expect } from '@jest/globals';
 
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 import { SearchProvider, useSearch } from '@/contexts/SearchContext';
 
 const Consumer: React.FC = () => {
@@ -14,16 +15,16 @@ const Consumer: React.FC = () => {
 };
 
 describe('SearchContext', () => {
-  it('atualiza o termo de busca', () => {
-    render(
+  it('atualiza o termo de busca', async () => {
+    const { getByTestId, getByText } = render(
       <SearchProvider>
         <Consumer />
       </SearchProvider>
     );
 
-    expect(screen.getByTestId('term').textContent).toBe('');
-    fireEvent.click(screen.getByText('set'));
-    expect(screen.getByTestId('term').textContent).toBe('batman');
+    expect(getByTestId('term').textContent).toBe('');
+    await act(async () => { getByText('set').click(); });
+    expect(getByTestId('term').textContent).toBe('batman');
   });
 });
 
