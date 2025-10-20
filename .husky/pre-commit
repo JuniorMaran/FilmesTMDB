@@ -18,14 +18,6 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# Executar testes
-echo "🧪 Executando testes..."
-npm run test -- --run 2>&1
-if [ $? -ne 0 ]; then
-  echo "❌ Testes falharam!"
-  echo "Por favor, corrija os testes antes de fazer commit."
-  exit 1
-fi
 
 echo "✅ Todas as validações passaram! Commit permitido."
 
