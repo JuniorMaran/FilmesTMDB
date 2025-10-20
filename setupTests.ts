@@ -1,8 +1,8 @@
-// Jest setup file
-// Add custom matchers, globals, and test utilities here.
+import '@testing-library/jest-dom';
 
-// If you plan to use React Testing Library, uncomment the line below
-// import '@testing-library/jest-dom';
-
+import { TextEncoder, TextDecoder } from 'util';
+(global as any).TextEncoder 
+= TextEncoder;
+(global as any).TextDecoder = TextDecoder as any;
 export {};
 

@@ -8,11 +8,11 @@ Aplicação web para explorar filmes usando a API do The Movie Database (TMDB). 
 - @tanstack/react-query
 - Tailwind CSS
 - Axios
-- Vitest + React Testing Library
+- Jest
 
 ## Pré‑requisitos
 - Node.js 18+
-- Yarn (recomendado) ou npm
+- Yarn ou npm
 
 ## Variáveis de ambiente
 Crie um arquivo `.env` (ou `.env.local`) na raiz do projeto:

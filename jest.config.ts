@@ -10,7 +10,7 @@ const config: Config = {
   transform: {
     '^.+\\.(ts|tsx)$': [
       'ts-jest',
-      { useESM: true, tsconfig: 'tsconfig.app.json' }
+      { useESM: true, tsconfig: 'tsconfig.jest.json' }
     ],
   },
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
