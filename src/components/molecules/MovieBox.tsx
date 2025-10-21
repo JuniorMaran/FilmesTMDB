@@ -72,7 +72,7 @@ export const MovieBox: React.FC<MovieBoxProps> = ({ movie, variant = 'default' }
     return (
         <Link to={`/movie/${movie.id}`}>
             <div
-                className="flex flex-col h-full max-w-[250px] shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-md transition-all duration-300 relative hover:scale-115  z-0 hover:z-50 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                className="flex flex-col h-full max-w-[250px] shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-md relative hover:scale-115 z-0 hover:z-50 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
             >
