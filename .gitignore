@@ -22,3 +22,10 @@ dist-ssr
 *.sw?
 
 coverage/
+
+
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions

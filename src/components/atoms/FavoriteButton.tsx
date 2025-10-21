@@ -15,12 +15,21 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({ favorite, large 
     };
 
     const getIconColor = () => {
-        if (favorite) return large ? 'text-white' : 'text-red-500';
-        return large ? 'text-[var(--primary-color)]' : 'text-red-500';
+        if (favorite && large){
+            return 'text-white';
+        }
+        if(favorite && !large){
+            return 'text-red-500';
+        }
+        if(!favorite && large){
+            return 'text-[var(--primary-color)]';
+        }
+        if(!favorite && !large){
+            return 'text-red-500';
+        }
     };
 
     const getButtonText = () => {
-        if (!large) return null;
         return favorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos';
     };
 
