@@ -24,9 +24,7 @@ export const PageButton: React.FC<PageButtonProps> = ({ page, customPath }) => {
 
     return (
         <Link to={finalPath}>
-            <button className="btn-primary">
-                {pageName}
-            </button>
+            <span className="btn-primary">{pageName}</span>
         </Link>
     );
 };

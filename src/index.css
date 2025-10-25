@@ -29,7 +29,7 @@ h1 {
 img {
   border: 0;
 }
-button.btn-primary {
+.btn-primary {
   border-radius: 8px;
   padding: 0.6em 1.2em;
   color: var(--secundary-color);
@@ -38,8 +38,8 @@ button.btn-primary {
   transition: border-color 0.25s;
 }
 
-button.btn-primary:hover,
-button.btn-primary:focus {
+.btn-primary:hover,
+.btn-primary:focus {
   border: 1px solid var(--primary-color);
   color: var(--primary-color);
   background-color: var(--secundary-color);
