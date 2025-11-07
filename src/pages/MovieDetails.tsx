@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
+
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { BoxImage } from '@/components/atoms/BoxImage';
 import { GenreTag } from '@/components/atoms/GenreTag';
@@ -12,10 +14,28 @@ import { SimilarGrid } from '@/components/organisms/SimilarGrid';
 import { MovieReview } from '@/components/organisms/MovieReview';
 
 export const MovieDetails: React.FC = () => {
-    const [movieById, setMovieById] = useState<MovieByIdResponse>({} as MovieByIdResponse);
-    const { addMovie, removeMovie, isFavorite } = useFavoriteMovies();
-
     const { id } = useParams();
+    return (
+        <Suspense
+            fallback={
+                <div className="flex justify-center py-10">
+                    <p className="text-[var(--primary-color)]">Carregando detalhes...</p>
+                </div>
+            }
+        >
+            <MovieDetailsContent id={id} />
+        </Suspense>
+    );
+};
+
+const MovieDetailsContent: React.FC<{ id?: string }> = ({ id }) => {
+    const { data: movieById } = useSuspenseQuery<MovieByIdResponse>({
+        queryKey: ['movieById', id],
+        queryFn: () => tmdbService.getMovieById(id),
+        staleTime: 1000 * 60 * 5,
+    });
+
+    const { addMovie, removeMovie, isFavorite } = useFavoriteMovies();
     const favorite = isFavorite(Number(id));
 
     const handleFavoriteClick = () => {
@@ -25,19 +45,6 @@ export const MovieDetails: React.FC = () => {
             addMovie(movieById);
         }
     };
-
-    useEffect(() => {
-        const loadMoviePopularData = async () => {
-            try {
-                const response = await tmdbService.getMovieById(id);
-                setMovieById(response);
-            } catch (error) {
-                console.error('Error fetching movies:', error);
-            }
-        };
-
-        loadMoviePopularData();
-    }, [id]);
 
     return (
         <>
@@ -71,8 +78,28 @@ export const MovieDetails: React.FC = () => {
                 </div>
             </div>
 
-            {movieById?.id && <div><MovieReview movieId={movieById.id} /></div>}
-            {movieById?.id && <div><SimilarGrid movieId={movieById.id} /></div>}
+            {movieById?.id && (
+                <Suspense
+                    fallback={
+                        <div className="flex justify-center py-10">
+                            <p className="text-[var(--primary-color)]">Carregando avaliações...</p>
+                        </div>
+                    }
+                >
+                    <div><MovieReview movieId={movieById.id} /></div>
+                </Suspense>
+            )}
+            {movieById?.id && (
+                <Suspense
+                    fallback={
+                        <div className="flex justify-center py-10">
+                            <p className="text-[var(--primary-color)]">Carregando filmes similares...</p>
+                        </div>
+                    }
+                >
+                    <div><SimilarGrid movieId={movieById.id} /></div>
+                </Suspense>
+            )}
         </>
     );
 };
