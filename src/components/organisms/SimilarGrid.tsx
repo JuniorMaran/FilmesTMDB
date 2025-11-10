@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { tmdbService, type MoviePopularResults } from '@/services/tmdbService';
 import { MovieBox } from '@/components/molecules/MovieBox';
 import { Title } from '@/components/atoms/Title';
@@ -7,39 +8,18 @@ interface SimilarGridProps {
     movieId: number;
 }
 
+type SimilarResponse = { results: MoviePopularResults[]; total_results?: number; total_pages?: number; page?: number };
+
 export const SimilarGrid: React.FC<SimilarGridProps> = ({ movieId }) => {
-    const [similarMovies, setSimilarMovies] = useState<MoviePopularResults[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { data } = useSuspenseQuery<SimilarResponse>({
+        queryKey: ['similarMovies', movieId],
+        queryFn: () => tmdbService.getSimilarMovies(movieId),
+        staleTime: 1000 * 60 * 5,
+    });
 
-    useEffect(() => {
-        const loadSimilarMovies = async () => {
-            try {
-                setIsLoading(true);
-                setError(null);
-                const response = await tmdbService.getSimilarMovies(movieId);
-                setSimilarMovies(response.results?.slice(0, 6) || []);
-            } catch (err) {
-                console.error('Error loading similar movies:', err);
-                setError('Erro ao carregar filmes similares');
-                setSimilarMovies([]);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+    const similarMovies = data?.results?.slice(0, 6) ?? [];
 
-        loadSimilarMovies();
-    }, [movieId]);
-
-    if (isLoading) {
-        return (
-            <div className="flex justify-center py-10">
-                <p className="text-[var(--primary-color)]">Carregando filmes similares...</p>
-            </div>
-        );
-    }
-
-    if (error || similarMovies.length === 0) {
+    if (!similarMovies.length) {
         return null;
     }
 

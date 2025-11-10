@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { tmdbService, type MovieReviewResult } from '@/services/tmdbService';
 import { ReviewCard } from '@/components/molecules/ReviewCard';
 import { Title } from '../atoms/Title';
@@ -7,39 +8,18 @@ interface MovieReviewProps {
     movieId: number;
 }
 
+type ReviewsResponse = { results: MovieReviewResult[]; total_results?: number; total_pages?: number; page?: number };
+
 export const MovieReview: React.FC<MovieReviewProps> = ({ movieId }) => {
-    const [reviews, setReviews] = useState<MovieReviewResult[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { data } = useSuspenseQuery<ReviewsResponse>({
+        queryKey: ['movieReviews', movieId],
+        queryFn: () => tmdbService.getMovieReviews(movieId),
+        staleTime: 1000 * 60 * 5,
+    });
 
-    useEffect(() => {
-        const loadReviews = async () => {
-            try {
-                setIsLoading(true);
-                setError(null);
-                const response = await tmdbService.getMovieReviews(movieId);
-                 setReviews(response.results?.slice(0, 3) || []);
-            } catch (err) {
-                console.error('Error loading reviews:', err);
-                setError('Erro ao carregar avaliações');
-                setReviews([]);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+    const reviews = data?.results?.slice(0, 3) ?? [];
 
-        loadReviews();
-    }, [movieId]);
-
-    if (isLoading) {
-        return (
-            <div className="flex justify-center py-10">
-                <p className="text-[var(--primary-color)]">Carregando avaliações...</p>
-            </div>
-        );
-    }
-
-    if (error || reviews.length === 0) {
+    if (!reviews.length) {
         return null;
     }
 

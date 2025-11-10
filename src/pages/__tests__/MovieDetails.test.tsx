@@ -20,16 +20,20 @@ vi.mock('@/components/organisms/MovieReview', () => ({
 }));
 
 import { tmdbService } from '@/services/tmdbService';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 
 const renderWithRouter = (initialPath: string) =>
   render(
-    <MemoryRouter initialEntries={[initialPath]}>
-      <FavoriteMoviesProvider>
-        <Routes>
-          <Route path="/movie/:id" element={<MovieDetails />} />
-        </Routes>
-      </FavoriteMoviesProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <MemoryRouter initialEntries={[initialPath]}>
+        <FavoriteMoviesProvider>
+          <Routes>
+            <Route path="/movie/:id" element={<MovieDetails />} />
+          </Routes>
+        </FavoriteMoviesProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
 describe('MovieDetails (smoke)', () => {

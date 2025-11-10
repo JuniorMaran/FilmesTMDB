@@ -2,6 +2,8 @@ import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vites
 import type { Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import React, { Suspense } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SimilarGrid } from '../SimilarGrid';
 import { FavoriteMoviesProvider } from '@/contexts/FavoriteMoviesContext';
 import { SearchProvider } from '@/contexts/SearchContext';
@@ -20,14 +22,31 @@ vi.mock('@/services/tmdbService', () => ({
         getImagePath: (path: string) => `https://image.tmdb.org/t/p/w300${path}`,
     },
 }));
+class TestErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+    constructor(props: { children: React.ReactNode }) {
+        super(props);
+        this.state = { hasError: false };
+    }
+    static getDerivedStateFromError() { return { hasError: true }; }
+    componentDidCatch() {}
+    render() { return this.state.hasError ? null : this.props.children; }
+}
+
 import { tmdbService } from '@/services/tmdbService';
 
 const renderWithProviders = (component: React.ReactElement) => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     return render(
         <BrowserRouter>
             <FavoriteMoviesProvider>
                 <SearchProvider>
-                    {component}
+                    <QueryClientProvider client={queryClient}>
+                        <TestErrorBoundary>
+                            <Suspense fallback={<div>Carregando filmes similares...</div>}>
+                                {component}
+                            </Suspense>
+                        </TestErrorBoundary>
+                    </QueryClientProvider>
                 </SearchProvider>
             </FavoriteMoviesProvider>
         </BrowserRouter>
@@ -134,7 +153,13 @@ describe('SimilarGrid', () => {
             <BrowserRouter>
                 <FavoriteMoviesProvider>
                     <SearchProvider>
-                        <SimilarGrid movieId={2} />
+                        <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+                            <TestErrorBoundary>
+                                <Suspense fallback={<div>Carregando filmes similares...</div>}>
+                                    <SimilarGrid movieId={2} />
+                                </Suspense>
+                            </TestErrorBoundary>
+                        </QueryClientProvider>
                     </SearchProvider>
                 </FavoriteMoviesProvider>
             </BrowserRouter>

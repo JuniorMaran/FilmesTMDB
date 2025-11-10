@@ -2,7 +2,20 @@ import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vites
 import type { Mock } from 'vitest';
 import { tmdbService } from '@/services/tmdbService';
 import { render, screen, waitFor } from '@testing-library/react';
+import React, { Suspense } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MovieReview } from '../MovieReview';
+
+class TestErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() { return { hasError: true }; }
+  componentDidCatch() {}
+  render() { return this.state.hasError ? null : this.props.children; }
+}
+
 
 const mockReviews = [
     {
@@ -45,6 +58,19 @@ vi.mock('@/utils/dateUtils', () => ({
     formatDate: (date: string) => new Date(date).toLocaleDateString('pt-BR'),
 }));
 
+const renderWithQuery = (ui: React.ReactElement) => {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <TestErrorBoundary>
+        <Suspense fallback={<div>Carregando avaliações...</div>}>
+          {ui}
+        </Suspense>
+      </TestErrorBoundary>
+    </QueryClientProvider>
+  );
+};
+
 describe('MovieReview', () => {
     let consoleErrorSpy: any;
     beforeAll(() => {
@@ -61,7 +87,7 @@ describe('MovieReview', () => {
     it('should render loading state initially', () => {
         (tmdbService.getMovieReviews as unknown as Mock).mockImplementation(() => new Promise(() => {}));
 
-        render(<MovieReview movieId={1} />);
+        renderWithQuery(<MovieReview movieId={1} />);
 
         expect(screen.getByText('Carregando avaliações...')).toBeInTheDocument();
     });
@@ -69,7 +95,7 @@ describe('MovieReview', () => {
     it('should render reviews after loading', async () => {
         (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: mockReviews });
 
-        render(<MovieReview movieId={1} />);
+        renderWithQuery(<MovieReview movieId={1} />);
 
         await waitFor(() => {
             expect(screen.getByText('Avaliações')).toBeInTheDocument();
@@ -92,7 +118,7 @@ describe('MovieReview', () => {
         }));
         (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: manyReviews });
 
-        render(<MovieReview movieId={1} />);
+        renderWithQuery(<MovieReview movieId={1} />);
 
         await waitFor(() => {
             expect(screen.getByText('Avaliações')).toBeInTheDocument();
@@ -105,7 +131,7 @@ describe('MovieReview', () => {
     it('should not render when no reviews found', async () => {
         (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: [] });
 
-        const { container } = render(<MovieReview movieId={1} />);
+        const { container } = renderWithQuery(<MovieReview movieId={1} />);
 
         await waitFor(() => {
             expect(container.firstChild).toBeNull();
@@ -115,7 +141,7 @@ describe('MovieReview', () => {
     it('should handle errors gracefully', async () => {
         (tmdbService.getMovieReviews as unknown as Mock).mockRejectedValue(new Error('API Error'));
 
-        const { container } = render(<MovieReview movieId={1} />);
+        const { container } = renderWithQuery(<MovieReview movieId={1} />);
 
         await waitFor(() => {
             expect(container.firstChild).toBeNull();
@@ -125,7 +151,7 @@ describe('MovieReview', () => {
     it('should call getMovieReviews with correct movieId', async () => {
         (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: mockReviews });
 
-        render(<MovieReview movieId={123} />);
+        renderWithQuery(<MovieReview movieId={123} />);
 
         await waitFor(() => {
             expect(tmdbService.getMovieReviews).toHaveBeenCalledWith(123);
@@ -135,7 +161,7 @@ describe('MovieReview', () => {
     it('should reload when movieId changes', async () => {
         (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: mockReviews });
 
-        const { rerender } = render(<MovieReview movieId={1} />);
+        const { rerender } = renderWithQuery(<MovieReview movieId={1} />);
 
         await waitFor(() => {
             expect(tmdbService.getMovieReviews).toHaveBeenCalledWith(1);
@@ -143,7 +169,15 @@ describe('MovieReview', () => {
 
         (tmdbService.getMovieReviews as unknown as Mock).mockClear();
 
-        rerender(<MovieReview movieId={2} />);
+        rerender(
+          <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+            <TestErrorBoundary>
+              <Suspense fallback={<div>Carregando avaliações...</div>}>
+                <MovieReview movieId={2} />
+              </Suspense>
+            </TestErrorBoundary>
+          </QueryClientProvider>
+        );
 
         await waitFor(() => {
             expect(tmdbService.getMovieReviews).toHaveBeenCalledWith(2);
@@ -153,7 +187,7 @@ describe('MovieReview', () => {
     it('should display review ratings when available', async () => {
         (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: mockReviews });
 
-        render(<MovieReview movieId={1} />);
+        renderWithQuery(<MovieReview movieId={1} />);
 
         await waitFor(() => {
             expect(screen.getByText('8')).toBeInTheDocument();
@@ -165,7 +199,7 @@ describe('MovieReview', () => {
     it('should have links to full reviews', async () => {
         (tmdbService.getMovieReviews as unknown as Mock).mockResolvedValue({ results: mockReviews });
 
-        render(<MovieReview movieId={1} />);
+        renderWithQuery(<MovieReview movieId={1} />);
 
         await waitFor(() => {
             const links = screen.getAllByText('Ler avaliação completa →');
